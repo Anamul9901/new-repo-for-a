@@ -6,7 +6,7 @@ export type Variants = {
 
 export type Inventory = {
   quantity: number;
-  inStack: boolean;
+  inStock: boolean;
 };
 
 export type Product = {
