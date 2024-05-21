@@ -13,20 +13,33 @@ const createProduct = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(404).json({
+      success: false,
+      message: 'Product not created!',
+    });
   }
 };
 
-const getAllProducts = async (req: Request, res: Response) => {
+const searchOrAllProduct = async (req: Request, res: Response) => {
   try {
-    const result = await ProductService.getAllProductsFromDB();
+    const { searchTerm } = req.query as any;
+    const result = await ProductService.searchOrGetAllProductFromDB(searchTerm);
 
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
+      message: searchTerm
+        ? `Products matching search term '${searchTerm}' fetched successfully!`
+        : 'Products fetched successfully!',
+
       data: result,
     });
+    // console.log(searchTerm);
   } catch (err) {
     console.log(err);
+    res.status(404).json({
+      success: false,
+      message: 'Products not found!',
+    });
   }
 };
 
@@ -42,6 +55,30 @@ const getSingleProduct = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(404).json({
+      success: false,
+      message: 'Product not found!',
+    });
+  }
+};
+
+const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const product = req.body;
+    const result = await ProductService.updateProductIntoDB(productId, product);
+
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully!',
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({
+      success: false,
+      message: 'Product not updated!',
+    });
   }
 };
 
@@ -53,16 +90,22 @@ const deleteProduct = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully!',
-      data: result,
+      data: null,
     });
   } catch (err) {
     console.log(err);
+
+    res.status(404).json({
+      success: false,
+      message: 'Product not deleted!',
+    });
   }
 };
 
 export const ProductController = {
   createProduct,
-  getAllProducts,
+  searchOrAllProduct,
   getSingleProduct,
+  updateProduct,
   deleteProduct,
 };
