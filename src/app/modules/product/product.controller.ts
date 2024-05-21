@@ -11,11 +11,11 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product created successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: 'Product not created!',
+      message: err.message,
     });
   }
 };
@@ -34,11 +34,11 @@ const searchOrAllProduct = async (req: Request, res: Response) => {
       data: result,
     });
     // console.log(searchTerm);
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: 'Products not found!',
+      message: err.message,
     });
   }
 };
@@ -53,11 +53,11 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'Product fetched successfully!!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: 'Product not found!',
+      message: err.message,
     });
   }
 };
@@ -73,11 +73,11 @@ const updateProduct = async (req: Request, res: Response) => {
       message: 'Product updated successfully!',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: 'Product not updated!',
+      message: err.message,
     });
   }
 };
@@ -92,12 +92,12 @@ const deleteProduct = async (req: Request, res: Response) => {
       message: 'Product deleted successfully!',
       data: null,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
 
     res.status(404).json({
       success: false,
-      message: 'Product not deleted!',
+      message: err.message,
     });
   }
 };
