@@ -11,11 +11,11 @@ export type Inventory = {
 
 export type Product = {
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  category: string;
-  tags: string[];
+  category?: string;
+  tags?: string[];
   variants: Variants[];
-  inventory: Inventory[];
+  inventory: Inventory;
 };
 

@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
 import { ProductService } from './product.service';
+import { z } from "zod";
+import productValidationSchema from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
+
+    // data validation using zod
     const product = req.body;
-    const result = await ProductService.createProductIntoDB(product);
+
+    const zodParsedData = productValidationSchema.parse(product)
+
+
+    const result = await ProductService.createProductIntoDB(zodParsedData);
 
     res.status(200).json({
       success: true,
@@ -15,7 +23,7 @@ const createProduct = async (req: Request, res: Response) => {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: err.message,
+      message: err,
     });
   }
 };
