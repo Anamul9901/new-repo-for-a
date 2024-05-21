@@ -1,16 +1,14 @@
 import { Request, Response } from 'express';
 import { ProductService } from './product.service';
-import { z } from "zod";
+import { z } from 'zod';
 import productValidationSchema from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-
-    // data validation using zod
     const product = req.body;
 
-    const zodParsedData = productValidationSchema.parse(product)
-
+    // product data validation using zod
+    const zodParsedData = productValidationSchema.parse(product);
 
     const result = await ProductService.createProductIntoDB(zodParsedData);
 
@@ -74,7 +72,13 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const product = req.body;
-    const result = await ProductService.updateProductIntoDB(productId, product);
+
+    const zodParsedData = productValidationSchema.parse(product);
+
+    const result = await ProductService.updateProductIntoDB(
+      productId,
+      zodParsedData,
+    );
 
     res.status(200).json({
       success: true,
@@ -85,7 +89,7 @@ const updateProduct = async (req: Request, res: Response) => {
     console.log(err);
     res.status(404).json({
       success: false,
-      message: err.message,
+      message: err,
     });
   }
 };
@@ -105,7 +109,7 @@ const deleteProduct = async (req: Request, res: Response) => {
 
     res.status(404).json({
       success: false,
-      message: err.message,
+      message: 'product not found!',
     });
   }
 };

@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import { OrderService } from './order.service';
+import orderValidationSchema from './order.validation';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
     const order = req.body;
-    const result = await OrderService.createOrderIntoDB(order);
+
+    // order data validation using zod
+    const zodParsedData = await orderValidationSchema.parseAsync(order);
+
+    const result = await OrderService.createOrderIntoDB(zodParsedData);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
@@ -13,7 +18,7 @@ const createOrder = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(400).json({
       success: false,
-      message: err.message,
+      message: err,
     });
   }
 };
