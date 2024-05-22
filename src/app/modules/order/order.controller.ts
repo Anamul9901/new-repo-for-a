@@ -57,7 +57,7 @@ const createOrder = async (req: Request, res: Response) => {
       message: 'Order created successfully!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     res.status(400).json({
       success: false,
       message: 'Order not found',

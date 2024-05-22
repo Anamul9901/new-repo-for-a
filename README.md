@@ -76,6 +76,9 @@ DATABASE_URL=mongodb+srv://<USER_NAME>:<PASSWORD>@cluster0.lyb9tdm.mongodb.net/l
 3. **This server have two routes**
 * http://localhost:5000/api/products
 * http://localhost:5000/api/orders
+  
+4. **Live server**
+* https://level-2-assignment-2-tawny.vercel.app/api/products
 
 
 ## Contributing
