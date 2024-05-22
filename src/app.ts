@@ -22,7 +22,7 @@ app.all('*', (req: Request, res: Response) => {
 });
 
 // global error handler
-app.use((error: any, req: Request, res: Response) => {
+app.use((error: unknown, req: Request, res: Response) => {
   if (error) {
     res.status(400).json({
       success: false,

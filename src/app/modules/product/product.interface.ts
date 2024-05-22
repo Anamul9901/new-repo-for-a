@@ -1,4 +1,3 @@
-
 export type Variants = {
   type: string;
   value: string;
@@ -19,4 +18,3 @@ export type Product = {
   variants: Variants[];
   inventory: Inventory;
 };
-

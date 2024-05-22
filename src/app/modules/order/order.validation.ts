@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-
 // order validate by zod validation
 const orderValidationSchema = z.object({
   email: z.string().email('Invalid email address'),

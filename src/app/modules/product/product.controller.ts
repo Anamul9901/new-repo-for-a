@@ -16,7 +16,7 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product created successfully!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     // console.log(err);
     res.status(404).json({
       success: false,
@@ -38,7 +38,7 @@ const searchOrGetAllProduct = async (req: Request, res: Response) => {
         : 'Products fetched successfully!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     // console.log(err);
     res.status(404).json({
       success: false,
@@ -58,7 +58,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'Product fetched successfully!!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     // console.log(err);
     res.status(404).json({
       success: false,
@@ -85,28 +85,27 @@ const updateProduct = async (req: Request, res: Response) => {
       message: 'Product updated successfully!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     // console.log(err);
     res.status(404).json({
       success: false,
-      message: err.issues[0].message,
+      message: err,
     });
   }
 };
-
 
 // delete a product by id
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const result = await ProductService.deleteProductFromDB(productId);
+    await ProductService.deleteProductFromDB(productId);
 
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully!',
       data: null,
     });
-  } catch (err: any) {
+  } catch (err) {
     // console.log(err);
     res.status(404).json({
       success: false,
