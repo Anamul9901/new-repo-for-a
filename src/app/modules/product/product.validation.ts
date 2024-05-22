@@ -6,10 +6,11 @@ const variantsValidationSchema = z.object({
 });
 
 const inventoryValidationSchema = z.object({
-  quantity: z.number().int().min(0, 'Quantity must be a non-negative integer'),
+  quantity: z.number().int().min(0, 'Quantity must be a positive number'),
   inStock: z.boolean(),
 });
 
+// validate product schema by zod validation
 const productValidationSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),

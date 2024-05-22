@@ -1,3 +1,4 @@
+// order types
 export type Order = {
   email: string;
   productId: string;

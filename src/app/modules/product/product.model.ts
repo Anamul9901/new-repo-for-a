@@ -11,6 +11,7 @@ const inventorySchema = new Schema<Inventory>({
   inStock: { type: Boolean, required: true },
 });
 
+// product schema
 const productSchema = new Schema<Product>({
   name: { type: String, required: true },
   description: { type: String },
@@ -21,4 +22,5 @@ const productSchema = new Schema<Product>({
   inventory: { type: inventorySchema, required: true },
 });
 
+// product model
 export const ProductModel = model<Product>('Product', productSchema);

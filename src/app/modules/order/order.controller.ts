@@ -6,11 +6,10 @@ import { ProductModel } from '../product/product.model';
 const createOrder = async (req: Request, res: Response) => {
   try {
     const order = req.body;
-    // console.log(zodParsedData);
-    const zodParsedData = await orderValidationSchema.parseAsync(order);
 
+    // order data validation using zod
+    const zodParsedData = await orderValidationSchema.parseAsync(order);
     const product = await ProductModel.findById(zodParsedData.productId);
-    console.log('quantity:', product && product?.inventory.quantity - order.quantity);
 
     if (!product) {
       return res.status(400).json({
@@ -18,7 +17,10 @@ const createOrder = async (req: Request, res: Response) => {
         message: 'Order not found',
       });
     }
-    if (product?.inventory.quantity <= 0) {
+    if (
+      product?.inventory.quantity <= 0 ||
+      product?.inventory.quantity < order.quantity
+    ) {
       return res.status(400).json({
         success: false,
         message: 'Insufficient quantity available in inventory',
@@ -26,8 +28,6 @@ const createOrder = async (req: Request, res: Response) => {
     }
     product.inventory.quantity -= order.quantity;
     await product.save();
-
-    // order data validation using zod
 
     const result = await OrderService.createOrderIntoDB(zodParsedData);
     res.status(200).json({
@@ -38,7 +38,7 @@ const createOrder = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(400).json({
       success: false,
-      message: 'Route not found',
+      message: 'Order not found',
     });
   }
 };
@@ -56,7 +56,7 @@ const searchOrGetAllProducts = async (req: Request, res: Response) => {
       return: result,
     });
   } catch (err: any) {
-    console.log(err);
+    // console.log(err);
     res.status(400).json({
       success: false,
       message: err.message,
