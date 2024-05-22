@@ -3,6 +3,7 @@ import { OrderService } from './order.service';
 import orderValidationSchema from './order.validation';
 import { ProductModel } from '../product/product.model';
 
+// post a order
 const createOrder = async (req: Request, res: Response) => {
   try {
     const order = req.body;
@@ -11,12 +12,25 @@ const createOrder = async (req: Request, res: Response) => {
     const zodParsedData = await orderValidationSchema.parseAsync(order);
     const product = await ProductModel.findById(zodParsedData.productId);
 
+    // if product id and order productId is not same then return false
     if (!product) {
       return res.status(400).json({
         success: false,
         message: 'Order not found',
       });
     }
+
+    // if product quantity <= 0 then save product isStock = false and return false
+    if (product?.inventory.quantity <= 0) {
+      product.inventory.inStock = false;
+      await product.save();
+      return res.status(400).json({
+        success: false,
+        message: 'Insufficient quantity available in inventory',
+      });
+    }
+
+    // if product quantity <= 0 or less then order quantity then return false
     if (
       product?.inventory.quantity <= 0 ||
       product?.inventory.quantity < order.quantity
@@ -26,6 +40,14 @@ const createOrder = async (req: Request, res: Response) => {
         message: 'Insufficient quantity available in inventory',
       });
     }
+
+    // if product quantity is finished then save product inStock = false.
+    if (product?.inventory.quantity == order.quantity) {
+      product.inventory.inStock = false;
+      await product.save();
+    }
+
+    // if order successfull then decress product quantity
     product.inventory.quantity -= order.quantity;
     await product.save();
 
@@ -43,7 +65,8 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-const searchOrGetAllProducts = async (req: Request, res: Response) => {
+// get all order or search order
+const searchOrGetAllOrder = async (req: Request, res: Response) => {
   try {
     const { email } = req.query as any;
     const result = await OrderService.searchOrGetAllOrderFromDb(email);
@@ -56,7 +79,6 @@ const searchOrGetAllProducts = async (req: Request, res: Response) => {
       return: result,
     });
   } catch (err: any) {
-    // console.log(err);
     res.status(400).json({
       success: false,
       message: err.message,
@@ -66,5 +88,5 @@ const searchOrGetAllProducts = async (req: Request, res: Response) => {
 
 export const OrderController = {
   createOrder,
-  searchOrGetAllProducts,
+  searchOrGetAllOrder,
 };
